@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Damato</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> -->
+  <meta name="metro4:init" content="false">
+  <!-- Metro 4 -->
+  <link rel="stylesheet" href="src/css/metro-all.min.css">
+  <!-- 预加载遮挡，全局样式，页面切换动画 -->
+  <style>
+    /* 预加载遮挡 */
+    [ v-cloak] {
+      display: none
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    .blur {
+      -webkit-filter: blur(5px);
+      /* Chrome, Opera */
+      -moz-filter: blur(5px);
+      -ms-filter: blur(5px);
+      filter: blur(5px);
+    }
+
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: opacity .5s;
+    }
+
+    .fade-enter,
+    .fade-leave-to {
+      opacity: 0;
+    }
+
+    .slide-fade-enter-active {
+      transition: all .2s ease;
+    }
+
+    .slide-fade-leave-active {
+      transition: all .2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+    }
+
+    .slide-fade-enter {
+      transform: translateY(10px);
+      opacity: 0;
+    }
+
+    .slide-fade-leave-to {
+      transform: translateY(-10px);
+      opacity: 0;
+    }
+  </style>
+  <!-- 修改滚动条样式 -->
+  <style>
+    /*修改滚动条样式*/
+    div::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+      /**/
+    }
+
+    div::-webkit-scrollbar-track {
+      background: rgb(239, 239, 239);
+      border-radius: 2px;
+    }
+
+    div::-webkit-scrollbar-thumb {
+      background: #bfbfbf;
+      border-radius: 10px;
+    }
+
+    div::-webkit-scrollbar-thumb:hover {
+      background: #333;
+    }
+
+    div::-webkit-scrollbar-corner {
+      background: #179a16;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- app 主体 -->
+  <div data-role="navview" data-expand="lg" data-compact="fs" data-active-state='true' id="app" v-cloak>
+    <!-- 侧边菜单 -->
+    <div class="navview-pane">
+      <button class="pull-button">
+        <span class="default-icon-menu"></span>
+      </button>
+      <ul class="navview-menu">
+        <li @click="currentPage=0" :class="[currentPage===0?'active':'']">
+          <a class="c-pointer">
+            <span class="icon"><span class="mif-home"></span></span>
+            <span class="caption">Damato</span>
+          </a>
+        </li>
+        <li @click="currentPage=1" :class="[currentPage===1?'active':'']">
+          <a class="c-pointer">
+            <span class="icon"><span class="mif-chart-bars"></span></span>
+            <span class="caption">Chart</span>
+          </a>
+        </li>
+        <li @click="currentPage=2" :class="[currentPage===2?'active':'']">
+          <a class="c-pointer">
+            <span class="icon"><span class="mif-cog"></span></span>
+            <span class="caption">Setting</span>
+          </a>
+        </li>
+        <li @click="currentPage=3" :class="[currentPage===3?'active':'']">
+          <a class="c-pointer">
+            <span class="icon"><span class="mif-bug"></span></span>
+            <span class="caption">FeedBack</span>
+          </a>
+        </li>
+        <li @click="currentPage=4" :class="[currentPage===4?'active':'']">
+          <a class="c-pointer">
+            <span class="icon"><span class="mif-info"></span></span>
+            <span class="caption">About</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 主体面板 -->
+    <div class="navview-content h-100">
+      <!-- 任务操作主页面 -->
+      <transition name="slide-fade">
+        <div class="h-100 w-100" v-show="currentPage === 0">
+          <!-- 任务完成状态 -->
+          <div class="h-25 pt-5 pb-5" style="overflow-y: auto;">
+            <div class="flex-justify-center tiles-grid">
+              <div data-role="tile" class="bg-white">
+                <div class="slide d-flex flex-align-center flex-justify-center border bd-black fg-black">
+                  <span class="display3 fg-black">{{taskFinishedStatus().finishedCount}}</span>
+                  <span class="branding-bar d-flex flex-align-center flex-justify-center">Finished</span>
+                </div>
+              </div>
+              <div data-role="tile" class="bg-white">
+                <div class="slide d-flex flex-align-center flex-justify-center border bd-black fg-black">
+                  <span class="display3">{{taskFinishedStatus().unFinishedCount}}</span>
+                  <span class="branding-bar d-flex flex-align-center flex-justify-center fg-gray">Unfinished</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 任务列表 -->
+          <div class="h-75 pb-20" style="overflow-y: auto;">
+            <ul class="custom-list">
+              <li class="p-2" v-for="task in damato.tasks">
+                <div class="more-info-box bg-white fg-black">
+                  <div class="content c-pointer" @click="taskEdit(task)">
+                    <h4 class="text-bold mb-0">{{task.title}}</h4>
+                    <div>{{task.subTitle}}</div>
+                  </div>
+                  <div class="icon">
+                    <span class="mif-play c-pointer" @click="subTaskDo(taskNearestSubTask(task),task)"></span>
+                  </div>
+                  <a class="more bg-white bg-white-hover" style="text-align:left;background-image: linear-gradient(90deg,rgb(173, 216, 230,0.1),rgb(174, 174, 243,0.1),rgb(196, 247, 103,0.1),rgb(33, 107, 247,0.1),rgb(1, 1, 32,0.1),rgba(0, 0, 0, 0.2));">
+                    <div class="row">
+                      <span class="mr-2 cell" v-for="timeClassify of timeClassifys" data-role="hint"
+                        data-cls-hint="bg-lightGray fg-black drop-shadow" :data-hint-text="timeClassify[0]">
+                        <span v-for="subTask of sortSubTask(task.subTasks)">
+                          <span class="mif-alarm ani-heartbeat mif-2x ani-hover-shuttle c-pointer" data-role="hint"
+                            data-cls-hint="bg-lightGray fg-black drop-shadow" :data-hint-text="subTask.alarmTime"
+                            v-if="subTask.timeClassify === timeClassify[0] && subTask.status==='' && taskNearestSubTask(task).id === subTask.id"
+                            @click="subTaskDo(subTask,task)"></span>
+                          <span class="mif-alarm-on fg-orange mif-2x" data-role="hint"
+                            data-cls-hint="bg-lightGray fg-black drop-shadow" :data-hint-text="subTask.alarmTime"
+                            v-else-if="subTask.timeClassify === timeClassify[0] && subTask.status==='finished'"></span>
+                          <span class="mif-alarm mif-2x ani-hover-shuttle c-pointer" data-role="hint"
+                            data-cls-hint="bg-lightGray fg-black drop-shadow" :data-hint-text="subTask.alarmTime"
+                            v-else-if="subTask.timeClassify === timeClassify[0] && subTask.status===''"
+                            @click="subTaskDo(subTask,task)"></span>
+                        </span>
+                      </span>
+                    </div>
+                  </a>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- 快速开始任务按钮 -->
+          <div class="pos-absolute pos-bottom-center mb-5" style="z-index: 100;opacity: 0.9;" data-role="hint"
+            data-cls-hint="bg-lightGray fg-black drop-shadow" :data-hint-text="allTaskNearestSubTask()[0].alarmTime"
+            v-if="allTaskNearestSubTask()!=''" @click="subTaskDo(allTaskNearestSubTask()[0],allTaskNearestSubTask()[1])"
+            data-role="ripple" data-ripple-target="button">
+            <button class="command-button px-5">
+              <span class="mif-play icon"></span>
+              <span class="caption">
+                {{allTaskNearestSubTask()[1].title}}
+                <small>{{allTaskNearestSubTask()[1].subTitle}}</small>
+              </span>
+            </button>
+          </div>
+
+          <!-- 任务编辑面板 -->
+          <div data-role="charms" data-opacity=".5" id="editTask_charm" data-position="right"
+            data-on-open="if(app.editTask.id===''){$(deleteTaskBtn).hide()}else{$(deleteTaskBtn).show()}"
+            class="w-100-sm w-75-lg px-20-sm px-10-lg bg-light fg-black">
+            <div class="grid">
+              <div class="row fg-black">
+                <h1 v-if="editTask.id===''">New task</h1>
+                <h1 v-else>Edit task</h1>
+              </div>
+              <div class="row fg-gray">
+                <div class="cell">
+                  <input type="text" data-role="materialinput" data-label="Title" data-cls-label="fg-black"
+                    placeholder="Enter title" v-model='editTask.title'>
+                </div>
+                <div class="cell">
+                  <input type="text" data-role="materialinput" data-label="Subtitle" data-cls-label="fg-black"
+                    placeholder="Enter subtitle" v-model='editTask.subTitle'>
+                </div>
+              </div>
+              <div class="row">
+                <div class="cell">
+                  <div class="fg-gray pt-4"><label>Task times</label></div>
+                  <input type="text" data-role="spinner" data-min-value="1" v-model="editTask.editTaskTimes"
+                    onchange="$(this)[0].dispatchEvent(new Event('input'));">
+                </div>
+                <div class="cell">
+                  <div class="fg-gray pt-4"><label>Task continue time</label></div>
+                  <input data-role="timepicker" onchange="$(this)[0].dispatchEvent(new Event('input'));"
+                    v-model="editTask.editTaskContinueTime">
+                </div>
+              </div>
+            </div>
+            <h3 class="fg-black">Subtasks detail</h3>
+            <div class="h-50 pb-15" style="overflow-y: auto;">
+              <div class="grid text-center">
+                <div class="row w-100">
+                  <div class="cell-1">
+                    Alarm?
+                  </div>
+                  <div class="cell-5">
+                    Alarm time
+                  </div>
+                  <div class="cell-5">
+                    Task continue time
+                  </div>
+                  <div class="cell-1">
+                    Option
+                  </div>
+                </div>
+                <div class="row w-100" v-for="(subTask,index) in editTask.subTasks">
+                  <div class="cell-1">
+                    <input type="checkbox" data-role="switch" data-caption="" v-model="subTask.weatherAlarm"
+                      data-material="true">
+                  </div>
+                  <div class="cell-5">
+                    <input data-role="timepicker" :data-value="subTask.alarmTime" v-model="subTask.alarmTime"
+                      onchange="$(this)[0].dispatchEvent(new Event('input'));" @change="classifyTime(subTask)">
+                  </div>
+                  <div class="cell-5">
+                    <input data-role="timepicker" :data-value="subTask.continueTime" v-model="subTask.continueTime"
+                      onchange="$(this)[0].dispatchEvent(new Event('input'));">
+                  </div>
+                  <div class="cell-1 pt-3">
+                    <a @click="deleteSubTask(index);"><span class="mif-bin  c-pointer"></span></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 快速操作按钮 -->
+          <div class="pos-absolute pos-bottom-right mb-5 mr-5" style="z-index: 1091;opacity: 0.9;">
+            <div class="multi-action">
+              <button class="action-button rotate-minus bg-gray fg-black" id="newTask_btn"
+                @click="newTaskInit();toggleCharms()">
+                <span class="icon"><span class="mif-plus"></span></span>
+              </button>
+              <ul class="actions drop-left">
+                <li class="bg-lightGreen c-pointer" @click="editTaskSave"><a><span class="mif-done"></span></a>
+                </li>
+                <li class="bg-lightRed c-pointer" @click="taskDelete" id="deleteTaskBtn"><a><span
+                      class="mif-bin"></span></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <!-- 统计页面 -->
+      <transition name="slide-fade">
+        <div class="h-100 w-100" v-show="currentPage === 1" style="overflow-y: auto;">
+          <div class="card">
+            <div class="card-header">
+              Totle analyse
+            </div>
+            <div class="card-content p-2 h-30" style="position: relative;">
+              <canvas id="chart_all" width='1000' height='300'></canvas>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              {{detailAnalyseType}} analyse
+            </div>
+            <div class="card-content p-2 h-30" style="position: relative;">
+              <canvas id="chart_detail" width='1000' height='300'></canvas>
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <!-- 设置页面 -->
+      <transition name="slide-fade">
+        <div class="h-100 w-100" v-show="currentPage === 2">
+          <div v-if="userInfo.userId === ''" class="container d-flex flex-align-center flex-justify-center h-100">
+            <div v-if="signOrLog==='sign'" class="border bd-gray p-20" key='signPage'>
+              <div class="display1 text-center">Sign in</div>
+              <div>
+                <input type="text" data-role="materialinput" data-icon="<span class='mif-user'>" data-label="User name"
+                  placeholder="Enter your user name" v-model="userEditInfo.userName">
+              </div>
+              <div>
+                <input type="text" data-role="materialinput" data-icon="<span class='mif-envelop'>"
+                  data-label="User email" placeholder="Enter your email" v-model="userEditInfo.userEmail">
+              </div>
+              <div>
+                <input type="text" data-role="materialinput" data-icon="<span class='mif-phone'>"
+                  data-label="User phone number" placeholder="Enter your phone number" v-model="userEditInfo.userPhone">
+              </div>
+              <div>
+                <input type="password" data-role="materialinput" data-icon="<span class='mif-lock'>"
+                  data-label="password" placeholder="Enter your password" v-model="userEditInfo.userOldPassw">
+              </div>
+              <div>
+                <input type="password" data-role="materialinput" data-icon="<span class='mif-lock'>"
+                  data-label="Re password" placeholder="Re enter your password" v-model="userEditInfo.userNewPassw">
+              </div>
+              <div class="pt-10 d-flex flex-justify-center">
+                <div data-role="buttongroup" class="button-group">
+                  <button class="button bg-lightBlue px-20" @click="userSignIn">Sign in</button>
+                </div>
+              </div>
+              <div class="pt-5 d-flex flex-justify-center">
+                <div data-role="buttongroup" class="button-group">
+                  <button class="button bg-lightGray px-20" @click="signOrLog='log'">Log in</button>
+                </div>
+              </div>
+            </div>
+            <div v-if="signOrLog==='log'" class="border bd-gray p-20" key='logPage'>
+              <div class="display1 text-center">Log in</div>
+              <div>
+                <input type="text" data-role="materialinput" data-icon="<span class='mif-envelop'>"
+                  data-label="User email" placeholder="Enter your email" v-model="userEditInfo.userEmail">
+              </div>
+              <div>
+                <input type="password" data-role="materialinput" data-icon="<span class='mif-lock'>"
+                  data-label="Password" placeholder="Enter your password" v-model="userEditInfo.userNewPassw">
+              </div>
+              <div class="pt-10 d-flex flex-justify-center">
+                <div data-role="buttongroup" class="button-group">
+                  <button class="button bg-lightBlue px-20" @click="">Log in</button>
+                </div>
+              </div>
+              <div class="pt-5 d-flex flex-justify-center">
+                <div data-role="buttongroup" class="button-group">
+                  <button class="button bg-lightGray px-20" @click="signOrLog='sign'">Sign in</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-else>
+            <div class="social-box" v-if="!userInfoEditTag">
+              <div class="header bg-cyan fg-white mt-0">
+                <img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=317152053,3725599296&fm=26&gp=0.jpg"
+                  class="avatar">
+                <div class="title">{{userInfo.userName}}</div>
+                <div class="subtitle">{{userInfo.userTag}}</div>
+              </div>
+              <ul class="skills">
+                <li>
+                  <div class="text-bold">{{allAnalyseData.damatoCount}}</div>
+                  <div>Damato count</div>
+                </li>
+                <li>
+                  <div class="text-bold">{{allAnalyseData.damatoFinishCount}}</div>
+                  <div>Damato finish count</div>
+                </li>
+                <li>
+                  <div class="text-bold">{{allAnalyseData.damatoContinueCounte}}</div>
+                  <div>Damato continue count</div>
+                </li>
+              </ul>
+            </div>
+            <div class="container" v-if='userInfoEditTag'>
+              <div class="display1">Edit user info</div>
+              <div>
+                <input type="text" data-role="materialinput" data-icon="<span class='mif-user'>" data-label="User name"
+                  placeholder="Enter your user name" v-model="userEditInfo.userName">
+              </div>
+              <div>
+                <input type="text" data-role="materialinput" data-icon="<span class='mif-envelop'>"
+                  data-label="User email" placeholder="Enter your email" v-model="userEditInfo.userEmail">
+              </div>
+              <div>
+                <input type="text" data-role="materialinput" data-icon="<span class='mif-phone'>"
+                  data-label="User phone number" placeholder="Enter your phone number" v-model="userEditInfo.userPhone">
+              </div>
+              <div>
+                <input type="password" data-role="materialinput" data-icon="<span class='mif-envelop'>"
+                  data-label="Old password" placeholder="Enter your old password" v-model="userEditInfo.userOldPassw">
+              </div>
+              <div>
+                <input type="password" data-role="materialinput" data-icon="<span class='mif-envelop'>"
+                  data-label="New password" placeholder="Enter your new password" v-model="userEditInfo.userNewPassw">
+              </div>
+              <div>
+                <input type="checkbox" data-role="switch" data-caption="Sync data to service"
+                  v-model="userEditInfo.userSync" data-material="true">
+              </div>
+              <div class="pt-10 d-flex flex-justify-center">
+                <div data-role="buttongroup" class="button-group">
+                  <button class="button bg-lightBlue px-10" @click="userInfoUpdate">Save</button>
+                  <button class="button bg-lightGray px-10" @click="userInfoEditTag=false">Cancel</button>
+                </div>
+              </div>
+            </div>
+            <div class="container" v-if="!userInfoEditTag">
+              <ul class="inline-list mt-5">
+                <li>Email:</li>
+                <li>{{userInfo.userEmail}}</li>
+              </ul>
+              <ul class="inline-list mt-5">
+                <li>Phone:</li>
+                <li>{{userInfo.userPhone}}</li>
+              </ul>
+
+              <div class="mt-5">
+                <input class="fg-gray" type="checkbox" data-role="checkbox" data-caption="Sync data to service"
+                  v-model="userEditInfo.userSync" disabled data-material="true">
+              </div>
+              <div class="pt-10 d-flex flex-justify-center">
+                <div data-role="buttongroup" class="button-group">
+                  <button class="button bg-lightBlue px-10" @click="userInfoEditTag=true">Edit</button>
+                  <button class="button bg-lightGray px-10" @click="userLogOut">Logout</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <!-- 反馈页面 -->
+      <transition name="slide-fade ">
+        <div class="h-100 w-100 container" v-show="currentPage === 3" style="overflow-y: auto;">
+          <div class="display1">Please tell me if you have any problems or suggestions when you using it</div>
+          <textarea class="h-40" data-role="textarea" v-model="feedBackText"
+            data-prepend="<span class='mif-leanpub'></span>"></textarea>
+          <div class="pt-2 d-flex flex-justify-end">
+            <div data-role="buttongroup" class="button-group">
+              <button class="button bg-lightGreen px-10" @click="feedBackSubmit">Submit</button>
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <!-- 软件信息页面 -->
+      <transition name="slide-fade ">
+        <div class="h-100 w-100 " v-show="currentPage === 4" style="overflow-y: auto;">
+          <div class="display1 text-center">About</div>
+          <div class="container d-flex flex-align-center h-75">
+            <div class="text-center w-100">
+              <ul class="inline-list mt-5">
+                <li>Software name:</li>
+                <li>Damato</li>
+              </ul>
+              <ul class="inline-list mt-5">
+                <li>Software version:</li>
+                <li>0.1.0</li>
+              </ul>
+              <ul class="inline-list mt-5">
+                <li>Author:</li>
+                <li>WEX</li>
+              </ul>
+              <ul class="inline-list mt-5">
+                <li>Author email:</li>
+                <li><a href="">942208018@qq.com</a></li>
+              </ul>
+              <ul class="inline-list mt-5">
+                <li>Author github:</li>
+                <li><a href="">https://github.com/wxiaoer</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </div>
+
+    <!-- 计时器面板 -->
+    <div id="countDownDiv" v-if="doSubTask!=''">
+      <div class="pos-fixed pos-center global-dialog">
+        <div class="row flex-justify-center">
+          <span class="display1 fg-white">{{doTask.title}}</span>
+        </div>
+        <div id="countDown" data-role="countdown" data-animate="slide" class="fg-white" data-days="0"
+          :data-hours="doSubTask.continueTime.split(':')[0]" :data-minutes="doSubTask.continueTime.split(':')[1]"
+          :data-seconds="doSubTask.continueTime.split(':')[2]" data-on-alarm="app.taskFinish()"
+          data-on-countdown-create=""></div>
+        <div class="row flex-justify-center mt-10">
+          <button class="button outline fg-white" onclick="app.doSubTask='';app.doTask='';">Cancel</button>
+        </div>
+      </div>
+      <div class="overlay global-overlay bg-black fg-white" style="opacity: 0.8;"></div>
+    </div>
+  </div>
+</body>
+
+<script src="src/js/metro.min.js"></script>
+<script src="src/js/vue.js"></script>
+<script src="src/js/Chart.min.js"></script>
+<script src="src/pageMain.js"></script>
+
+</html>

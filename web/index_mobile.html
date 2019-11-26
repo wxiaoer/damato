@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/css/swiper.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/css/swiper.min.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            background-image: url(u7.jpg);
+            background-repeat: no-repeat;
+            background-size: 100%;
+        }
+
+        .bottom-nav-c {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
+            -ms-flex-flow: row nowrap;
+            flex-flow: row nowrap;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            position: fixed;
+            height: 56px;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            -webkit-box-shadow: 0 -2px 10px 0 rgba(0, 0, 0, .16), 0 -1px 5px 0 rgba(0, 0, 0, .26);
+            box-shadow: 0 -2px 10px 0 rgba(0, 0, 0, .16), 0 -1px 5px 0 rgba(0, 0, 0, .26);
+            z-index: 1030;
+            opacity: 0.9;
+        }
+
+        .bottom-nav-content {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
+            -ms-flex-flow: row nowrap;
+            flex-flow: row nowrap;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            /* position: fixed; */
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="row" style="height: 5%">
+        <div class="cell flex-align-self-start" style="margin:20px;margin-bottom: 0px">
+            <p class="text-left text-bold"><i class="icon mif-user"></i> Account</p>
+        </div>
+        <div class="cell flex-align-self-end" style="margin:20px;margin-bottom: 0px">
+            <p class="text-right text-bold fg-orange">Damato</p>
+        </div>
+    </div>
+    <div class="swiper-container" id="nav" style="height: 10%;">
+        <div class="swiper-wrapper display1 text-light">
+            <div class="swiper-slide">SETTING</div>
+            <div class="swiper-slide">TASKS</div>
+            <div class="swiper-slide">ANALYSE</div>
+            <div class="swiper-slide">FEEDBACK</div>
+        </div>
+    </div>
+    <div class="swiper-container" id="content" style="height: 85%;">
+        <div class="swiper-wrapper" style="height: 100%;">
+            <div class="swiper-slide container" style="height: 100%;overflow: scroll;padding-bottom: 70px;">
+                <p>setting</p>
+                <p>setting</p>
+                <p>setting</p>
+                <p>setting</p>
+                <p>setting</p>
+                <p>setting</p>
+                <p>setting</p>
+                <p>setting</p>
+                <p>setting</p>
+                <p>setting</p>
+                <p>setting</p>
+                <p>setting</p>
+                <p>setting</p>
+                <p>setting</p>
+                <p>setting</p>
+                <p>setting</p>
+                <p>setting</p>
+                <p>setting</p>
+                <p>setting</p>
+                <p>setting</p>
+            </div>
+            <div class="swiper-slide container" style="height: 100%;width: 100%;">
+                <div style="height: 100%;overflow: scroll;padding-bottom: 70px;">
+                    <div class="grid">
+                        <div class="row flex-align-center">
+                            <div class="cell fg-dark text-center text-bold">
+                                <h1>2</h1>
+                            </div>
+                            <div class="cell fg-dark text-center text-bold">
+                                <h1>5</h1>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="cell fg-dark text-center">
+                                DONE
+                            </div>
+                            <div class="cell fg-dark text-center">
+                                UNDONE
+                            </div>
+                        </div>
+                    </div>
+                    <ul data-role="listview" data-view="content">
+                        <li data-icon="<span class='mif-folder fg-orange'>" data-caption="READ"
+                            data-content='<input data-role="rating" data-value="3"><input data-role="rating" data-value="3">'>
+                        </li>
+                        <li data-icon="<span class='mif-folder fg-orange'>" data-caption="WORK"
+                            data-content='<input data-role="rating" data-value="1"><input data-role="rating" data-value="4">'>
+                        </li>
+                    </ul>
+                    <div class="d-flex flex-justify-end">
+                        <input data-role="rating" data-value="1">
+                        <input data-role="rating" data-value="1">
+                        <input data-role="rating" data-value="1">
+                        <input data-role="rating" data-value="1">
+                    </div>
+                </div>
+                <div class="pos-absolute pos-bottom-center" style="margin-bottom: 70px">
+                    <button class="action-button">
+                        <span class="icon"><span class="mif-play"></span></span>
+                    </button>
+                    <div class="pos-relative pos-bottom-center">BEGIN</div>
+                </div>
+            </div>
+            <div class="swiper-slide container" style="height: 100%;overflow: scroll;padding-bottom: 70px;">analyze
+            </div>
+            <div class="swiper-slide container" style="height: 100%;overflow: scroll;padding-bottom: 70px;">feedback
+            </div>
+
+        </div>
+
+    </div>
+    <div class="swiper-container bottom-nav-c pos-absolute bg-light" id="footer">
+        <div class="swiper-wrapper text-light">
+            <div class="swiper-slide text-bold bottom-nav-content bg-light">
+                <div class="buttons" data-role="buttongroup" data-cls-active="bg-white fg-dark">
+                    <button class="button outline cycle dark">
+                        <span class="icon mif-unlink"></span>
+                        <span class="footer-nav-btn-info"
+                            style="position: absolute;bottom:-30px;right:4px;display:none ;">quit</span>
+                    </button>
+                    <button class="button outline cycle dark">
+                        <span class="icon mif-tab"></span>
+                        <span class="footer-nav-btn-info"
+                            style="position: absolute;bottom:-30px;right:4px;display:none ;">cut</span>
+                    </button>
+                </div>
+                <div style="position: absolute;top:0px;right:5px"
+                    onclick="$('.footer-nav-btn-info').toggle();if($('#footer').height()==70){$('#footer').height(56)}else{$('#footer').height(70)}">
+                    <span class="button flat bg-light">...</span>
+                </div>
+            </div>
+            <div class="swiper-slide text-bold bottom-nav-content bg-light">
+                <div class="buttons" data-role="buttongroup" data-cls-active="bg-white fg-dark">
+                    <button class="button outline cycle dark">
+                        <span class="icon mif-list"></span>
+                        <span class="footer-nav-btn-info"
+                            style="position: absolute;bottom:-30px;right:4px;display:none ;">select</span>
+                    </button>
+
+                    <button class="button outline cycle dark">
+                        <span class="icon mif-plus"></span>
+                        <span class="footer-nav-btn-info"
+                            style="position: absolute;bottom:-30px;right:4px;display:none ;">add</span>
+                    </button>
+                </div>
+                <div style="position: absolute;top:0px;right:5px"
+                    onclick="$('.footer-nav-btn-info').toggle();if($('#footer').height()==70){$('#footer').height(56)}else{$('#footer').height(70)}">
+                    <span class="button flat bg-light">...</span>
+                </div>
+            </div>
+            <div class="swiper-slide text-bold bottom-nav-content bg-light">
+                <span class="button">analyze</span>
+                <div style="position: absolute;top:0px;right:5px"
+                    onclick="$('.footer-nav-btn-info').toggle();if($('#footer').height()==70){$('#footer').height(56)}else{$('#footer').height(70)}">
+                    <span class="button flat bg-light">...</span>
+                </div>
+            </div>
+            <div class="swiper-slide text-bold bottom-nav-content bg-light">
+                <span class="button">feedback</span>
+                <div style="position: absolute;top:0px;right:5px"
+                    onclick="$('.footer-nav-btn-info').toggle();if($('#footer').height()==70){$('#footer').height(56)}else{$('#footer').height(70)}">
+                    <span class="button flat bg-light">...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="bottom-nav-c pos-absolute bg-light">
+        <div class="buttons">
+            <button class="button outline cycle dark">
+                <span class="icon mif-list"></span>
+                <span style="position: absolute;bottom:-30px;right:0px;display:none ;">选择</span>
+            </button>
+            <button class="button outline cycle dark">
+                <span class="icon mif-plus"></span>
+            </button>
+        </div>
+        <div style="position: absolute;top:0px;right:5px ">
+            <span class="button flat bg-light">...</span>
+        </div>
+    </div> -->
+    <!-- <div class="bottom-nav-c pos-absolute bg-light">
+        <div class="buttons">
+            <button class="button outline cycle dark">
+                <span class="icon mif-unlink"></span>
+            </button>
+            <button class="button outline cycle dark">
+                <span class="icon mif-tab"></span>
+            </button>
+        </div>
+    </div> -->
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.metroui.org.ua/v4/js/metro.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/js/swiper.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/js/swiper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/js/swiper.esm.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/js/swiper.esm.bundle.js"></script>
+    <script>
+        $(document).ready(function () {
+            var swiperNav = new Swiper('#nav', {
+                slidesPerView: 3,
+                centeredSlides: true,
+                initialSlide: 1,
+                slidesOffsetBefore: 20,
+                slideActiveClass: 'text-bold fg-dark',
+                touchRatio: 0,
+                breakpoints: {
+                    //当宽度小于等于320
+                    320: {
+                        slidesPerView: 1,
+                        spaceBetween: 100,
+                    },
+                    //当宽度小于等于480
+                    480: {
+                        slidesPerView: 3,
+                        spaceBetween: 100,
+                    },
+                    //当宽度小于等于640
+                    640: {
+                        slidesPerView: 3,
+                        spaceBetween: 100,
+                    }
+                },
+            });
+            var swiperFooter = new Swiper('#footer', {
+                centeredSlides: true,
+                initialSlide: 1,
+                direction: 'vertical',
+                effect: 'fade',
+                fadeEffect: {
+                    crossFade: true,
+                },
+                touchRatio: 0,
+            });
+            var swiperContent = new Swiper('#content', {
+                centeredSlides: true,
+                initialSlide: 1,
+            });
+            // swiperContent.controller.control = swiperNav;//Swiper1控制Swiper2，需要在Swiper2初始化后
+            // swiperNav.controller.control = swiperContent;//Swiper2控制Swiper1，需要在Swiper1初始化后
+            // // swiperFooter.controller.control = swiperContent;
+            // swiperContent.controller.control = [swiperFooter, swiperNav];
+            swiperContent.controller.control = swiperNav;
+            swiperNav.controller.control = swiperFooter;
+            function mySwipeFunction() {
+                alert('111');
+            }
+        })
+
+    </script>
+</body>
+
+</html>

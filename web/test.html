@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="cn">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            background-image: url(u7.jpg);
+            background-repeat: no-repeat;
+            background-size: 100%;
+        }
+
+        .bottom-nav-c {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
+            -ms-flex-flow: row nowrap;
+            flex-flow: row nowrap;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            height: 56px;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            -webkit-box-shadow: 0 -2px 10px 0 rgba(0, 0, 0, .16), 0 -1px 5px 0 rgba(0, 0, 0, .26);
+            box-shadow: 0 -2px 10px 0 rgba(0, 0, 0, .16), 0 -1px 5px 0 rgba(0, 0, 0, .26);
+            z-index: 1030;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="swiper-container" id="nav">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">设置</div>
+            <div class="swiper-slide">任务</div>
+            <div class="swiper-slide">统计</div>
+            <div class="swiper-slide">反馈</div>
+        </div>
+    </div>
+
+
+    <div class="swiper-container" id="content">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide container">
+                <p>设置</p>
+                <p>设置</p>
+                <p>设置</p>
+                <p>设置</p>
+                <p>设置</p>
+                <p>设置</p>
+                
+            </div>
+            <div class="swiper-slide container">
+                <p>任务</p>
+                <p>任务</p>
+                <p>任务</p>
+            </div>
+            <div class="swiper-slide container">统计</div>
+            <div class="swiper-slide container">反馈</div>
+        </div>
+    </div>
+
+    <div class="swiper-container" id="footer">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide"> <span class="button">设置</span> </div>
+            <div class="swiper-slide">
+                任务
+            </div>
+            <div class="swiper-slide"><span class="button">统计</span></div>
+            <div class="swiper-slide"><span class="button">反馈</span></div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.metroui.org.ua/v4/js/metro.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.esm.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.esm.bundle.js"></script>
+    <script>
+        $(document).ready(function () {
+            var swiperNav = new Swiper('#nav', {
+                slidesPerView: 3,
+                centeredSlides: true,
+                initialSlide: 1,
+                slidesOffsetBefore: 20,
+                slideActiveClass: 'text-bold fg-dark',
+                breakpoints: {
+                    //当宽度小于等于320
+                    320: {
+                        slidesPerView: 1,
+                    },
+                    //当宽度小于等于480
+                    480: {
+                        slidesPerView: 3,
+                    },
+                    //当宽度小于等于640
+                    640: {
+                        slidesPerView: 3,
+                        // spaceBetween: 30
+                    }
+                },
+            });
+            var swiperFooter = new Swiper('#footer', {
+                centeredSlides: true,
+                initialSlide: 1,
+                direction: 'vertical',
+                effect: 'flip',
+            });
+            var swiperContent = new Swiper('#content', {
+                centeredSlides: true,
+                initialSlide: 1,
+            });
+            // swiperContent.controller.control = swiperNav;//Swiper1控制Swiper2，需要在Swiper2初始化后
+            // swiperNav.controller.control = swiperContent;//Swiper2控制Swiper1，需要在Swiper1初始化后
+            // // swiperFooter.controller.control = swiperContent;
+            // swiperContent.controller.control = [swiperNav,swiperFooter];
+            swiperContent.controller.control = swiperNav;
+            swiperNav.controller.control = swiperFooter;
+            function mySwipeFunction() {
+                alert('111');
+            }
+        })
+
+    </script>
+</body>
+
+</html>

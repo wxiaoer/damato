@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Damato</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="metro4:init" content="false">
+
+    <!-- Metro 4 -->
+    <link rel="stylesheet" href="/css/metro-all.min.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        .blur {
+            -webkit-filter: blur(5px);
+            /* Chrome, Opera */
+            -moz-filter: blur(5px);
+            -ms-filter: blur(5px);
+            filter: blur(5px);
+        }
+
+        .fade-enter-active,
+        .fade-leave-active {
+            transition: opacity .5s;
+        }
+
+        .fade-enter,
+        .fade-leave-to {
+            opacity: 0;
+        }
+
+        .slide-fade-enter-active {
+            transition: all .2s ease;
+        }
+
+        .slide-fade-leave-active {
+            transition: all .2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+        }
+
+        .slide-fade-enter {
+            transform: translateY(10px);
+            opacity: 0;
+        }
+
+        .slide-fade-leave-to {
+            transform: translateY(-10px);
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div data-role="navview" data-expand="lg" data-compact="fs" data-active-state='true' id="app">
+        <div class="navview-pane">
+            <button class="pull-button">
+                <span class="default-icon-menu"></span>
+            </button>
+            <ul class="navview-menu">
+                <li @click="currentPage=0" :class="[currentPage==0?'active':'']">
+                    <a>
+                        <span class="icon"><span class="mif-home"></span></span>
+                        <span class="caption">Damato</span>
+                    </a>
+                </li>
+                <li @click="currentPage=1" :class="[currentPage==1?'active':'']">
+                    <a>
+                        <span class="icon"><span class="mif-chart-bars"></span></span>
+                        <span class="caption">Chart</span>
+                    </a>
+                </li>
+                <li @click="currentPage=2" :class="[currentPage==2?'active':'']">
+                    <a>
+                        <span class="icon"><span class="mif-cog"></span></span>
+                        <span class="caption">Setting</span>
+                    </a>
+                </li>
+                <li @click="currentPage=3" :class="[currentPage==3?'active':'']">
+                    <a>
+                        <span class="icon"><span class="mif-bug"></span></span>
+                        <span class="caption">FeedBack</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="navview-content h-100">
+            <transition name="slide-fade">
+                <div class="h-100 w-100" v-show="currentPage == 0">
+                    <!-- Task finished status -->
+                    <div class="h-25 pt-5 pb-5" style="overflow-y: auto;">
+                        <div class="flex-justify-center tiles-grid">
+                            <div data-role="tile" class="bg-white">
+                                <div
+                                    class="slide d-flex flex-align-center flex-justify-center border bd-black fg-black">
+                                    <span class="display3 fg-black">12</span>
+                                    <span
+                                        class="branding-bar d-flex flex-align-center flex-justify-center">Finished</span>
+                                </div>
+                            </div>
+                            <div data-role="tile" class="bg-white">
+                                <div
+                                    class="slide d-flex flex-align-center flex-justify-center border bd-black fg-black">
+                                    <span class="display3">22</span>
+                                    <span
+                                        class="branding-bar d-flex flex-align-center flex-justify-center fg-gray">Unfinished</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Task list -->
+                    <div class="h-75 pb-20" style="overflow-y: auto;">
+                        <ul class="custom-list">
+                            <li class="p-2">
+                                <div class="more-info-box bg-white fg-black">
+                                    <div class="content">
+                                        <h4 class="text-bold mb-0">Read</h4>
+                                        <div>Read novel</div>
+                                    </div>
+                                    <div class="icon">
+                                        <span class="mif-play"></span>
+                                    </div>
+                                    <a class="more bg-white" style="text-align:left">
+                                        <input data-role="rating" data-value="3" data-static="true">
+                                        <input data-role="rating" data-value="1" data-static="true">
+                                        <input data-role="rating" data-value="1" data-static="true">
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="p-2">
+                                <div class="more-info-box bg-white fg-black">
+                                    <div class="content">
+                                        <h4 class="text-bold mb-0">Learn</h4>
+                                        <div>Learn perfessinal technology</div>
+                                    </div>
+                                    <div class="icon">
+                                        <span class="mif-play"></span>
+                                    </div>
+                                    <a class="more bg-white" style="text-align:left">
+                                        <input data-role="rating" data-value="3" data-static="true">
+                                        <input data-role="rating" data-value="1" data-static="true">
+                                        <input data-role="rating" data-value="1" data-static="true">
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="p-2">
+                                <div class="more-info-box bg-white fg-black">
+                                    <div class="content">
+                                        <h4 class="text-bold mb-0">Watch movie</h4>
+                                        <div>Watch a good movie</div>
+                                    </div>
+                                    <div class="icon">
+                                        <span class="mif-play"></span>
+                                    </div>
+                                    <a class="more bg-white" style="text-align:left">
+                                        <input data-role="rating" data-value="3" data-static="true">
+                                        <input data-role="rating" data-value="1" data-static="true">
+                                        <input data-role="rating" data-value="1" data-static="true">
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="p-2">
+                                <div class="more-info-box bg-white fg-black">
+                                    <div class="content">
+                                        <h4 class="text-bold mb-0">Watch movie</h4>
+                                        <div>Watch a good movie</div>
+                                    </div>
+                                    <div class="icon">
+                                        <span class="mif-play"></span>
+                                    </div>
+                                    <a class="more bg-white" style="text-align:left">
+                                        <input data-role="rating" data-value="3" data-static="true">
+                                        <input data-role="rating" data-value="1" data-static="true">
+                                        <input data-role="rating" data-value="1" data-static="true">
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="p-2">
+                                <div class="more-info-box bg-white fg-black">
+                                    <div class="content">
+                                        <h4 class="text-bold mb-0">Watch movie</h4>
+                                        <div>Watch a good movie</div>
+                                    </div>
+                                    <div class="icon">
+                                        <span class="mif-play"></span>
+                                    </div>
+                                    <a class="more bg-white" style="text-align:left">
+                                        <input data-role="rating" data-value="3" data-static="true">
+                                        <input data-role="rating" data-value="1" data-static="true">
+                                        <input data-role="rating" data-value="1" data-static="true">
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="p-2">
+                                <div class="more-info-box bg-white fg-black">
+                                    <div class="content">
+                                        <h4 class="text-bold mb-0">Watch movie</h4>
+                                        <div>Watch a good movie</div>
+                                    </div>
+                                    <div class="icon" onclick="alert('222')">
+                                        <span class="mif-play"></span>
+                                    </div>
+                                    <a class="more bg-white" style="text-align:left">
+                                        <input data-role="rating" data-value="3" data-static="true">
+                                        <input data-role="rating" data-value="1" data-static="true">
+                                        <input data-role="rating" data-value="1" data-static="true">
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                    <!-- Quick options buttons -->
+                    <div class="pos-absolute pos-bottom-center mb-5" style="z-index: 100;opacity: 0.9;"
+                        data-role="ripple" data-ripple-target="button">
+                        <button class="command-button px-5">
+                            <span class="mif-play icon"></span>
+                            <span class="caption">
+                                Begin to read
+                                <small>This is the last read task</small>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </transition>
+            <transition name="slide-fade">
+                <div class="h-100 w-100" v-show="currentPage == 1" style="overflow-y: auto;">
+                    <div class="card">
+                        <div class="card-header">
+                            Week report
+                        </div>
+                        <div class="card-content p-2 h-30" style="position: relative;">
+                            <canvas id="chart_week" width='1000' height='300'></canvas>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            Month report
+                        </div>
+                        <div class="card-content p-2 h-30" style="position: relative;">
+                            <canvas id="chart_month" width='1000' height='300'></canvas>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            Year report
+                        </div>
+                        <div class="card-content p-2 h-30" style="position: relative;">
+                            <canvas id="chart_year" width='1000' height='300'></canvas>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            All report
+                        </div>
+                        <div class="card-content p-2 h-30" style="position: relative;">
+                            <canvas id="chart_all" width='1000' height='300'></canvas>
+                        </div>
+                    </div>
+                </div>
+            </transition>
+            <transition name="slide-fade">
+                <div class="h-100 w-100" v-show="currentPage == 2">
+                    <div class="social-box">
+                        <div class="header bg-cyan fg-white mt-0">
+                            <img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=317152053,3725599296&fm=26&gp=0.jpg"
+                                class="avatar">
+                            <div class="title">Wang er xiao</div>
+                            <div class="subtitle">Programer</div>
+                        </div>
+                        <ul class="skills">
+                            <li>
+                                <div class="text-bold">6</div>
+                                <div>AWARDS</div>
+                            </li>
+                            <li>
+                                <div class="text-bold">4</div>
+                                <div>NOMINATIONS</div>
+                            </li>
+                            <li>
+                                <div class="text-bold">36</div>
+                                <div>FILMS</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="container">
+                        <div style="display: none;">
+                            <input type="text" data-role="materialinput" data-icon="<span class='mif-user'>"
+                                data-label="User name" placeholder="Enter your user name" value="Wang er xiao">
+                        </div>
+                        <div>
+                            <input type="text" data-role="materialinput" data-icon="<span class='mif-envelop'>"
+                                data-label="User email" placeholder="Enter your email" value="22@2.com">
+                        </div>
+                        <div>
+                            <input type="text" data-role="materialinput" data-icon="<span class='mif-phone'>"
+                                data-label="User phone number" placeholder="Enter your phone number"
+                                value="13113111111"></div>
+                        <div style="display: none;">
+                            <input type="password" data-role="materialinput" data-icon="<span class='mif-envelop'>"
+                                data-label="Old password" placeholder="Enter your old password" value="">
+                        </div>
+                        <div style="display: none;">
+                            <input type="password" data-role="materialinput" data-icon="<span class='mif-envelop'>"
+                                data-label="New password" placeholder="Enter your new password" value="">
+                        </div>
+                        <div>
+                            <input type="checkbox" data-role="switch" data-caption="Sync data to service" checked
+                                data-material="true">
+                        </div>
+                        <div class="pt-10 d-flex flex-justify-center">
+                            <div data-role="buttongroup" class="button-group">
+                                <button class="button bg-lightBlue px-10">Edit</button>
+                                <button class="button bg-lightRed px-10">Sign out</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </transition>
+            <transition name="slide-fade ">
+                <div class="h-100 w-100 container" v-show="currentPage == 3" style="overflow-y: auto;">
+                    <div class="display1">Please tell me if you have any problems or Suggestions when you using it</div>
+                    <!-- <h2>使用过程中碰到什么问题或者有什么建议请告诉我吧</h2> -->
+                    <textarea class="h-40" data-role="textarea" data-prepend="<span class='mif-leanpub'></span>"></textarea>
+                    <div class="pt-2 d-flex flex-justify-end">
+                            <div data-role="buttongroup" class="button-group">
+                                <button class="button bg-lightGreen px-10">Submit</button>
+                            </div>
+                        </div>
+                </div>
+            </transition>
+        </div>
+    </div>
+
+    <!-- Metro 4 -->
+    <script src="/js/metro.min.js"></script>
+    <script src="/js/vue.js"></script>
+    <script src="/js/Chart.min.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                currentPage: 0,
+            },
+            mounted: function () {
+                Metro.init();
+            }
+        })
+        $(function () {
+            var ctw = document.getElementById('chart_week').getContext('2d');
+            var myChart = new Chart(ctw, {
+                type: 'bar',
+                data: {
+                    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                    datasets: [{
+                        label: '# of Votes',
+                        data: [12, 19, 3, 5, 2, 3],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+        var ctm = document.getElementById('chart_month').getContext('2d');
+        var myChart = new Chart(ctm, {
+            type: 'bar',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+        var cty = document.getElementById('chart_year').getContext('2d');
+        var myChart = new Chart(cty, {
+            type: 'bar',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+        var cta = document.getElementById('chart_all').getContext('2d');
+        var myChart = new Chart(cta, {
+            type: 'bar',
+            data: {
+                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                datasets: [{
+                    label: '# of Votes',
+                    data: [12, 19, 3, 5, 2, 3],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+    </script>
+</body>
+
+</html>
