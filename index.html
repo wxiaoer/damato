@@ -204,7 +204,8 @@
 
           <!-- 任务编辑面板 -->
           <div data-role="charms" data-opacity=".5" id="editTask_charm" data-position="right"
-            data-on-open="if(app.editTask.id===''){$(deleteTaskBtn).hide()}else{$(deleteTaskBtn).show()}"
+          data-on-open="if(app.editTask.id===''){$(deleteTaskBtn).hide()}else{$(deleteTaskBtn).show()}"
+          
             class="w-100-sm w-75-lg px-20-sm px-10-lg bg-light fg-black">
             <div class="grid">
               <div class="row fg-black">
@@ -303,7 +304,7 @@
           </div>
           <div class="card">
             <div class="card-header">
-              {{detailAnalyseType}} analyse
+               analyse
             </div>
             <div class="card-content p-2 h-30" style="position: relative;">
               <canvas id="chart_detail" width='1000' height='300'></canvas>

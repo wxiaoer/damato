@@ -1,19 +1,19 @@
 const { ipcRenderer } = require('electron')
 
+// 全局变量
 var notifyTimer;
 var newSubTaskTemplate = { 'id': 0, 'alarmTime': '09:00:00', 'continueTime': '00:15:00', 'weatherAlarm': true, 'status': '', 'startTime': '', 'timeClassify': '' };
 var newTaskTemplate = { 'editTaskTimes': 1, 'editTaskContinueTime': '00:15:00', 'id': '', 'title': '', 'subTitle': '', 'subTasks': [newSubTaskTemplate] };
+
 var app = new Vue({
     el: '#app',
     data: {
         currentPage: 0,
         damato: '',
-        tasks: [],
         timeClassifys: [['morning', { 'start': '06:00:00', 'end': '09:00:00' }], ['foreNoon', { 'start': '09:00:00', 'end': '12:00:00' }], ['noon', { 'start': '12:00:00', 'end': '14:00:00' }], ['afterNoon', { 'start': '14:00:00', 'end': '19:00:00' }], ['night', { 'start': '19:00:00', 'end': '24:00:00' }], ['other', { 'start': '00:00:00', 'end': '06:00:00' }]],
         editTask: { 'editTaskTimes': 1, 'editTaskContinueTime': '00:15:00', 'id': '', 'title': '', 'subTitle': '', 'subTasks': [newSubTaskTemplate] },
         doTask: '',
         doSubTask: '',
-        detailAnalyseType: 'Detail',
         userInfo: { 'userId': '', 'userName': '', 'userTag': '', 'userPhoto': '', 'userEmail': '', 'userPhone': '', 'userSync': true, 'userOldPassw': '', 'userNewPassw': '', 'logStatus': true, 'createTime': '' },
         userEditInfo: { 'userId': '', 'userName': '', 'userTag': '', 'userPhoto': '', 'userEmail': '', 'userPhone': '', 'userSync': true, 'userOldPassw': '', 'userNewPassw': '', 'logStatus': true, 'createTime': '' },
         userInfoEditTag: false,
