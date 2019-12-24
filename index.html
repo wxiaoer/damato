@@ -101,7 +101,7 @@
             <span class="caption">Damato</span>
           </a>
         </li>
-        <li @click="currentPage=1" :class="[currentPage===1?'active':'']">
+        <li @click="currentPage=1" @click.once="updateChartData()" :class="[currentPage===1?'active':'']">
           <a class="c-pointer">
             <span class="icon"><span class="mif-chart-bars"></span></span>
             <span class="caption">Chart</span>
@@ -109,17 +109,11 @@
         </li>
         <li @click="currentPage=2" :class="[currentPage===2?'active':'']">
           <a class="c-pointer">
-            <span class="icon"><span class="mif-cog"></span></span>
-            <span class="caption">Setting</span>
-          </a>
-        </li>
-        <li @click="currentPage=3" :class="[currentPage===3?'active':'']">
-          <a class="c-pointer">
             <span class="icon"><span class="mif-bug"></span></span>
             <span class="caption">FeedBack</span>
           </a>
         </li>
-        <li @click="currentPage=4" :class="[currentPage===4?'active':'']">
+        <li @click="currentPage=3" :class="[currentPage===3?'active':'']">
           <a class="c-pointer">
             <span class="icon"><span class="mif-info"></span></span>
             <span class="caption">About</span>
@@ -138,13 +132,13 @@
             <div class="flex-justify-center tiles-grid">
               <div data-role="tile" class="bg-white">
                 <div class="slide d-flex flex-align-center flex-justify-center border bd-black fg-black">
-                  <span class="display3 fg-black">{{taskFinishedStatus().finishedCount}}</span>
+                  <span class="display3 fg-black">{{tasksFinishedStatus(damato).finishedCount}}</span>
                   <span class="branding-bar d-flex flex-align-center flex-justify-center">Finished</span>
                 </div>
               </div>
               <div data-role="tile" class="bg-white">
                 <div class="slide d-flex flex-align-center flex-justify-center border bd-black fg-black">
-                  <span class="display3">{{taskFinishedStatus().unFinishedCount}}</span>
+                  <span class="display3">{{tasksFinishedStatus(damato).unFinishedCount}}</span>
                   <span class="branding-bar d-flex flex-align-center flex-justify-center fg-gray">Unfinished</span>
                 </div>
               </div>
@@ -163,7 +157,8 @@
                   <div class="icon">
                     <span class="mif-play c-pointer" @click="subTaskDo(taskNearestSubTask(task),task)"></span>
                   </div>
-                  <a class="more bg-white bg-white-hover" style="text-align:left;background-image: linear-gradient(90deg,rgb(173, 216, 230,0.1),rgb(174, 174, 243,0.1),rgb(196, 247, 103,0.1),rgb(33, 107, 247,0.1),rgb(1, 1, 32,0.1),rgba(0, 0, 0, 0.2));">
+                  <a class="more bg-white bg-white-hover"
+                    style="text-align:left;background-image: linear-gradient(90deg,rgb(173, 216, 230,0.1),rgb(174, 174, 243,0.1),rgb(196, 247, 103,0.1),rgb(33, 107, 247,0.1),rgb(1, 1, 32,0.1),rgba(0, 0, 0, 0.2));">
                     <div class="row">
                       <span class="mr-2 cell" v-for="timeClassify of timeClassifys" data-role="hint"
                         data-cls-hint="bg-lightGray fg-black drop-shadow" :data-hint-text="timeClassify[0]">
@@ -204,8 +199,7 @@
 
           <!-- 任务编辑面板 -->
           <div data-role="charms" data-opacity=".5" id="editTask_charm" data-position="right"
-          data-on-open="if(app.editTask.id===''){$(deleteTaskBtn).hide()}else{$(deleteTaskBtn).show()}"
-          
+            data-on-open="if(app.editTask.id===''){$(deleteTaskBtn).hide()}else{$(deleteTaskBtn).show()}"
             class="w-100-sm w-75-lg px-20-sm px-10-lg bg-light fg-black">
             <div class="grid">
               <div class="row fg-black">
@@ -296,158 +290,23 @@
         <div class="h-100 w-100" v-show="currentPage === 1" style="overflow-y: auto;">
           <div class="card">
             <div class="card-header">
-              Totle analyse
+              <div>Week analyse</div>
+              <div>{{dateFormat(new Date(viewDetailDamato.createTime))}}</div>
+              <div class="row">
+                <button class="button cell" @click="viewDayChange(-7)">< previous week</button>
+                <button class="button cell" @click="viewDayChange(7)">next week ></button>
+              </div>
             </div>
             <div class="card-content p-2 h-30" style="position: relative;">
-              <canvas id="chart_all" width='1000' height='300'></canvas>
+              <canvas id="chart_week" width='1000' height='300'></canvas>
             </div>
           </div>
           <div class="card">
             <div class="card-header">
-               analyse
+              <div>Day analyse</div>
             </div>
             <div class="card-content p-2 h-30" style="position: relative;">
-              <canvas id="chart_detail" width='1000' height='300'></canvas>
-            </div>
-          </div>
-        </div>
-      </transition>
-
-      <!-- 设置页面 -->
-      <transition name="slide-fade">
-        <div class="h-100 w-100" v-show="currentPage === 2">
-          <div v-if="userInfo.userId === ''" class="container d-flex flex-align-center flex-justify-center h-100">
-            <div v-if="signOrLog==='sign'" class="border bd-gray p-20" key='signPage'>
-              <div class="display1 text-center">Sign in</div>
-              <div>
-                <input type="text" data-role="materialinput" data-icon="<span class='mif-user'>" data-label="User name"
-                  placeholder="Enter your user name" v-model="userEditInfo.userName">
-              </div>
-              <div>
-                <input type="text" data-role="materialinput" data-icon="<span class='mif-envelop'>"
-                  data-label="User email" placeholder="Enter your email" v-model="userEditInfo.userEmail">
-              </div>
-              <div>
-                <input type="text" data-role="materialinput" data-icon="<span class='mif-phone'>"
-                  data-label="User phone number" placeholder="Enter your phone number" v-model="userEditInfo.userPhone">
-              </div>
-              <div>
-                <input type="password" data-role="materialinput" data-icon="<span class='mif-lock'>"
-                  data-label="password" placeholder="Enter your password" v-model="userEditInfo.userOldPassw">
-              </div>
-              <div>
-                <input type="password" data-role="materialinput" data-icon="<span class='mif-lock'>"
-                  data-label="Re password" placeholder="Re enter your password" v-model="userEditInfo.userNewPassw">
-              </div>
-              <div class="pt-10 d-flex flex-justify-center">
-                <div data-role="buttongroup" class="button-group">
-                  <button class="button bg-lightBlue px-20" @click="userSignIn">Sign in</button>
-                </div>
-              </div>
-              <div class="pt-5 d-flex flex-justify-center">
-                <div data-role="buttongroup" class="button-group">
-                  <button class="button bg-lightGray px-20" @click="signOrLog='log'">Log in</button>
-                </div>
-              </div>
-            </div>
-            <div v-if="signOrLog==='log'" class="border bd-gray p-20" key='logPage'>
-              <div class="display1 text-center">Log in</div>
-              <div>
-                <input type="text" data-role="materialinput" data-icon="<span class='mif-envelop'>"
-                  data-label="User email" placeholder="Enter your email" v-model="userEditInfo.userEmail">
-              </div>
-              <div>
-                <input type="password" data-role="materialinput" data-icon="<span class='mif-lock'>"
-                  data-label="Password" placeholder="Enter your password" v-model="userEditInfo.userNewPassw">
-              </div>
-              <div class="pt-10 d-flex flex-justify-center">
-                <div data-role="buttongroup" class="button-group">
-                  <button class="button bg-lightBlue px-20" @click="">Log in</button>
-                </div>
-              </div>
-              <div class="pt-5 d-flex flex-justify-center">
-                <div data-role="buttongroup" class="button-group">
-                  <button class="button bg-lightGray px-20" @click="signOrLog='sign'">Sign in</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div v-else>
-            <div class="social-box" v-if="!userInfoEditTag">
-              <div class="header bg-cyan fg-white mt-0">
-                <img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=317152053,3725599296&fm=26&gp=0.jpg"
-                  class="avatar">
-                <div class="title">{{userInfo.userName}}</div>
-                <div class="subtitle">{{userInfo.userTag}}</div>
-              </div>
-              <ul class="skills">
-                <li>
-                  <div class="text-bold">{{allAnalyseData.damatoCount}}</div>
-                  <div>Damato count</div>
-                </li>
-                <li>
-                  <div class="text-bold">{{allAnalyseData.damatoFinishCount}}</div>
-                  <div>Damato finish count</div>
-                </li>
-                <li>
-                  <div class="text-bold">{{allAnalyseData.damatoContinueCounte}}</div>
-                  <div>Damato continue count</div>
-                </li>
-              </ul>
-            </div>
-            <div class="container" v-if='userInfoEditTag'>
-              <div class="display1">Edit user info</div>
-              <div>
-                <input type="text" data-role="materialinput" data-icon="<span class='mif-user'>" data-label="User name"
-                  placeholder="Enter your user name" v-model="userEditInfo.userName">
-              </div>
-              <div>
-                <input type="text" data-role="materialinput" data-icon="<span class='mif-envelop'>"
-                  data-label="User email" placeholder="Enter your email" v-model="userEditInfo.userEmail">
-              </div>
-              <div>
-                <input type="text" data-role="materialinput" data-icon="<span class='mif-phone'>"
-                  data-label="User phone number" placeholder="Enter your phone number" v-model="userEditInfo.userPhone">
-              </div>
-              <div>
-                <input type="password" data-role="materialinput" data-icon="<span class='mif-envelop'>"
-                  data-label="Old password" placeholder="Enter your old password" v-model="userEditInfo.userOldPassw">
-              </div>
-              <div>
-                <input type="password" data-role="materialinput" data-icon="<span class='mif-envelop'>"
-                  data-label="New password" placeholder="Enter your new password" v-model="userEditInfo.userNewPassw">
-              </div>
-              <div>
-                <input type="checkbox" data-role="switch" data-caption="Sync data to service"
-                  v-model="userEditInfo.userSync" data-material="true">
-              </div>
-              <div class="pt-10 d-flex flex-justify-center">
-                <div data-role="buttongroup" class="button-group">
-                  <button class="button bg-lightBlue px-10" @click="userInfoUpdate">Save</button>
-                  <button class="button bg-lightGray px-10" @click="userInfoEditTag=false">Cancel</button>
-                </div>
-              </div>
-            </div>
-            <div class="container" v-if="!userInfoEditTag">
-              <ul class="inline-list mt-5">
-                <li>Email:</li>
-                <li>{{userInfo.userEmail}}</li>
-              </ul>
-              <ul class="inline-list mt-5">
-                <li>Phone:</li>
-                <li>{{userInfo.userPhone}}</li>
-              </ul>
-
-              <div class="mt-5">
-                <input class="fg-gray" type="checkbox" data-role="checkbox" data-caption="Sync data to service"
-                  v-model="userEditInfo.userSync" disabled data-material="true">
-              </div>
-              <div class="pt-10 d-flex flex-justify-center">
-                <div data-role="buttongroup" class="button-group">
-                  <button class="button bg-lightBlue px-10" @click="userInfoEditTag=true">Edit</button>
-                  <button class="button bg-lightGray px-10" @click="userLogOut">Logout</button>
-                </div>
-              </div>
+              <canvas id="chart_day" width='1000' height='300'></canvas>
             </div>
           </div>
         </div>
@@ -455,7 +314,7 @@
 
       <!-- 反馈页面 -->
       <transition name="slide-fade ">
-        <div class="h-100 w-100 container" v-show="currentPage === 3" style="overflow-y: auto;">
+        <div class="h-100 w-100 container" v-show="currentPage === 2" style="overflow-y: auto;">
           <div class="display1">Please tell me if you have any problems or suggestions when you using it</div>
           <textarea class="h-40" data-role="textarea" v-model="feedBackText"
             data-prepend="<span class='mif-leanpub'></span>"></textarea>
@@ -469,7 +328,7 @@
 
       <!-- 软件信息页面 -->
       <transition name="slide-fade ">
-        <div class="h-100 w-100 " v-show="currentPage === 4" style="overflow-y: auto;">
+        <div class="h-100 w-100 " v-show="currentPage === 3" style="overflow-y: auto;">
           <div class="display1 text-center">About</div>
           <div class="container d-flex flex-align-center h-75">
             <div class="text-center w-100">

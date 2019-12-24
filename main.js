@@ -65,38 +65,62 @@ ipcMain.on('sync-text', (event, arg) => {
 // 全局常量
 const DAMATO_STORAGE_PATH = 'damato.json'
 ARCHIVED_DAMATOS_STORAGE_PATH = 'archived_damatos.json'
-ANALYSED_DATA_STORAGE_PATH = 'analysed_data.json'
+
 // 全局变量
 // 加载damato数据
-fs.exists(DAMATO_STORAGE_PATH, function (exists) {
-  if (exists) {
-    fs.readFile(DAMATO_STORAGE_PATH, function (err, data) {
-      if (err) {
-        // global.damato = initDamatoCreate();
-        console.error(err);
-        return false;
-      }
-      let damatoJsonString = data.toString();
-      let damatoJsonObj = JSON.parse(damatoJsonString);
-      let currentDate = new Date().toLocaleDateString();
-      let damatoDate = new Date(damatoJsonObj.createTime).toLocaleDateString();
-      if (currentDate != damatoDate) {
-        damatoArchive(damatoJsonObj);
-        global.damato = damatoClean(damatoJsonObj);
-      } else {
-        global.damato = damatoJsonObj;
-      }
-      return true;
-    })
-  } else {
-    global.damato = damatoInit();
-  }
-})
+function loadDamato(){
+  fs.exists(DAMATO_STORAGE_PATH, function (exists) {
+    if (exists) {
+      fs.readFile(DAMATO_STORAGE_PATH, function (err, data) {
+        if (err) {
+          // global.damato = initDamatoCreate();
+          console.error(err);
+          return false;
+        }
+        let damatoJsonString = data.toString();
+        let damatoJsonObj = JSON.parse(damatoJsonString);
+        let currentDate = new Date().toLocaleDateString();
+        let damatoDate = new Date(damatoJsonObj.createTime).toLocaleDateString();
+        if (currentDate != damatoDate) {
+          damatoArchive(JSON.parse(JSON.stringify(damatoJsonObj)));
+          global.damato = damatoClean(damatoJsonObj);
+        } else {
+          global.damato = damatoJsonObj;
+        }
+        return true;
+      })
+    } else {
+      global.damato = damatoInit();
+    }
+  })
+}
+loadDamato();
+// 加载历史damato
+function loadArchivedDamato(){
+  fs.exists(ARCHIVED_DAMATOS_STORAGE_PATH, function (exists) {
+    if (exists) {
+      fs.readFile(ARCHIVED_DAMATOS_STORAGE_PATH, function (err, data) {
+        if (err) {
+          // global.damato = initDamatoCreate();
+          console.error(err);
+          return false;
+        }
+        let archivedDamatosJsonString = data.toString();
+        let archivedDamatosJsonObj = JSON.parse(archivedDamatosJsonString);
+        global.archivedDamatos = archivedDamatosJsonObj;
+        return true;
+      })
+    } else {
+      global.archivedDamatos = [];
+    }
+  })
+}
+loadArchivedDamato();
 
 // 初始damato创建
 function damatoInit() {
   let currentTime = new Date().getTime();
-  return { tasks: [], createTime: currentTime, id: '' };
+  return { tasks: [], createTime: currentTime, id: ''};
 }
 
 // 清除damato subtask 完成记录和创建时间
@@ -110,21 +134,30 @@ function damatoClean(archivedDamato) {
     }
   }
   archivedDamato.createTime = new Date().getTime();
+  archivedDamato.finishedSubTaskCount = 0;
+  taskDoTimeCount = 0;
   return archivedDamato;
 }
 
 // damato 归档
 function damatoArchive(damato) {
   fs.exists(ARCHIVED_DAMATOS_STORAGE_PATH, function (exists) {
+    var archivedDamatosObj;
+    var createDate = new Date(damato.createTime);
+    var createDateFormate = createDate.getFullYear() + '-' + (createDate.getMonth() + 1) + '-' + createDate.getDate();
     if (exists) {
       let archivedDamatosString = fs.readFileSync(ARCHIVED_DAMATOS_STORAGE_PATH).toString();
-      var archivedDamatosObj = JSON.parse(archivedDamatosString);
-      damato.id = archivedDamatosObj.length;
-      archivedDamatosObj.push(damato);
+      archivedDamatosObj = JSON.parse(archivedDamatosString);
+      // damato.id = archivedDamatosObj.length;
+      damato.id = Object.keys(archivedDamatosObj).length
+      // archivedDamatosObj.push(damato);
+      archivedDamatosObj[createDateFormate] = damato;
     } else {
-      var archivedDamatosObj = [];
-      damato.id = archivedDamatosObj.length;
-      archivedDamatosObj.push(damato);
+      // var archivedDamatosObj = [];
+      // damato.id = archivedDamatosObj.length;
+      // archivedDamatosObj.push(damato);
+      damato.id = 0;
+      archivedDamatosObj = {[createDateFormate]:damato};
     }
     fs.writeFile(ARCHIVED_DAMATOS_STORAGE_PATH, JSON.stringify(archivedDamatosObj), function (err, data) {
       if (err) {
