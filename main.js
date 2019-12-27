@@ -1,10 +1,10 @@
 const { app, BrowserWindow, Menu } = require('electron')
-const { ipcMain } = require('electron')
 var fs = require("fs")
 
 // 保持对window对象的全局引用，如果不这么做的话，当JavaScript对象被
 // 垃圾回收的时候，window对象将会自动的关闭
 let win
+let tray = null
 
 function createWindow() {
   // 创建浏览器窗口。
@@ -29,6 +29,31 @@ function createWindow() {
     // 通常会把多个 window 对象存放在一个数组里面，
     // 与此同时，你应该删除相应的元素。
     win = null
+  })
+  win.on('close', (event) => {
+    win.hide();
+    win.setSkipTaskbar(true);
+    event.preventDefault();
+  });
+  // mac os
+  // win.on('show', () => {
+  //   tray.setHighlightMode('always')
+  // })
+  // win.on('hide', () => {
+  //   tray.setHighlightMode('never')
+  // })
+  //创建系统通知区菜单
+  const path = require('path');
+  const {Tray} = require('electron');
+  tray = new Tray(path.join(__dirname, 'icon.ico'));
+  const contextMenu = Menu.buildFromTemplate([
+    { label: '退出', click: () => { win.destroy() } },//我们需要在这里有一个真正的退出（这里直接强制退出）
+  ])
+  tray.setToolTip('My托盘测试')
+  tray.setContextMenu(contextMenu)
+  tray.on('click', () => { //我们这里模拟桌面程序点击通知区图标实现打开关闭应用的功能
+    win.isVisible() ? win.hide() : win.show()
+    win.isVisible() ? win.setSkipTaskbar(false) : win.setSkipTaskbar(true);
   })
 }
 
@@ -57,6 +82,7 @@ app.on('activate', () => {
 
 // 在这个文件中，你可以续写应用剩下主进程代码。
 // 也可以拆分成几个文件，然后用 require 导入。
+const { ipcMain } = require('electron')
 ipcMain.on('sync-text', (event, arg) => {
   console.log(arg) // prints "ping"
   event.returnValue = 'main.js sync-test return'
@@ -68,7 +94,7 @@ ARCHIVED_DAMATOS_STORAGE_PATH = 'archived_damatos.json'
 
 // 全局变量
 // 加载damato数据
-function loadDamato(){
+function loadDamato() {
   fs.exists(DAMATO_STORAGE_PATH, function (exists) {
     if (exists) {
       fs.readFile(DAMATO_STORAGE_PATH, function (err, data) {
@@ -96,7 +122,7 @@ function loadDamato(){
 }
 loadDamato();
 // 加载历史damato
-function loadArchivedDamato(){
+function loadArchivedDamato() {
   fs.exists(ARCHIVED_DAMATOS_STORAGE_PATH, function (exists) {
     if (exists) {
       fs.readFile(ARCHIVED_DAMATOS_STORAGE_PATH, function (err, data) {
@@ -120,7 +146,7 @@ loadArchivedDamato();
 // 初始damato创建
 function damatoInit() {
   let currentTime = new Date().getTime();
-  return { tasks: [], createTime: currentTime, id: ''};
+  return { tasks: [], createTime: currentTime, id: '' };
 }
 
 // 清除damato subtask 完成记录和创建时间
@@ -157,7 +183,7 @@ function damatoArchive(damato) {
       // damato.id = archivedDamatosObj.length;
       // archivedDamatosObj.push(damato);
       damato.id = 0;
-      archivedDamatosObj = {[createDateFormate]:damato};
+      archivedDamatosObj = { [createDateFormate]: damato };
     }
     fs.writeFile(ARCHIVED_DAMATOS_STORAGE_PATH, JSON.stringify(archivedDamatosObj), function (err, data) {
       if (err) {
