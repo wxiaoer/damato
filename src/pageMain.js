@@ -64,7 +64,7 @@ var app = new Vue({
         viewDetailDamato: '',
         archivedDamatosMaxDate: '',
         archivedDamatosMinDate: '',
-        feedBackText: ''
+        feedBackText: '',
     },
     created: function () {
         // 加载 damato 数据
@@ -554,7 +554,7 @@ var app = new Vue({
             var finishedCount = []
             var unFinishedCount = []
             var labels = []
-            if (this.viewDetailDamato == undefined){
+            if (this.viewDetailDamato == undefined) {
                 return {
                     "finishedCount": finishedCount,
                     "unFinishedCount": unFinishedCount,
@@ -597,6 +597,13 @@ var app = new Vue({
             } else {
                 this.updateChartData(new Date(changeToDate));
             }
+        },
+        donate: function () {
+            var html_content =
+                '<div class="img-container" style="widht:100px"><img src="alipay.jpg"></div>' +
+                '<div class="img-container" style="widht:100px"><img src="wechat.jpg"></div>'+
+                "<p>Lorem Ipsum is simply dummy text...</p>";
+            Metro.infobox.create(html_content);
         }
     }
 })
