@@ -356,12 +356,12 @@ var app = new Vue({
         },
         feedBackSubmit: function () {
             if (this.feedBackText) {
-                let data = require('electron').ipcRenderer.sendSync('damatoFeedBack',this.feedBackText);
-                if (data.result == false){
-                    Metro.toast.create("Feedback failed : "+data.reason, null, 5000, "error");
-                }else{
+                let data = require('electron').ipcRenderer.sendSync('damatoFeedBack', this.feedBackText);
+                if (data.result == false) {
+                    Metro.toast.create("Feedback failed : " + data.reason, null, 5000, "error");
+                } else {
                     Metro.toast.create("Feedback success, thanks for your attation.", null, 5000, "info");
-                    this.feedBackText=''
+                    this.feedBackText = ''
                 }
             }
         },
@@ -386,6 +386,11 @@ var app = new Vue({
         },
         computeArchivedDamatoMaxMin: function () {
             let arr = [];
+            if (this.archivedDamatos.length == 0) {
+                this.archivedDamatosMaxDate = new Date().getTime()
+                this.archivedDamatosMinDate = new Date().getTime()
+                return
+            }
             for (let i in this.archivedDamatos) {
                 arr.push(i)
             };
@@ -394,8 +399,8 @@ var app = new Vue({
                 return (dateB.split("-")[0] * 12 * 30 + dateB.split("-")[1] * 12 + dateB.split("-")[2]) - (dateA.split("-")[0] * 12 * 30 + dateA.split("-")[1] * 12 + dateA.split("-")[2])
             }
             arr.sort(sortDateF);
-            this.archivedDamatosMaxDate = arr[0];
-            this.archivedDamatosMinDate = arr[arr.length - 1];
+            this.archivedDamatosMaxDate = arr[0]
+            this.archivedDamatosMinDate = arr[arr.length - 1]
         },
         initAnalysePage: function () {
             // 加载 archived damato 数据
@@ -546,15 +551,22 @@ var app = new Vue({
             };
         },
         viewTasksCount: function () {
-            var finishedCount = [];
-            var unFinishedCount = [];
-            var labels = [];
+            var finishedCount = []
+            var unFinishedCount = []
+            var labels = []
+            if (this.viewDetailDamato == undefined){
+                return {
+                    "finishedCount": finishedCount,
+                    "unFinishedCount": unFinishedCount,
+                    "labels": labels
+                }
+            }
             for (task of this.viewDetailDamato.tasks) {
                 if (task != undefined) {
-                    var damatoFinishedCount = this.taskFinishedStatus(task)["finishedCount"];
-                    var damatoUnFinishedCount = this.taskFinishedStatus(task)["unFinishedCount"];
-                    finishedCount.push(damatoFinishedCount);
-                    unFinishedCount.push(damatoUnFinishedCount);
+                    var damatoFinishedCount = this.taskFinishedStatus(task)["finishedCount"]
+                    var damatoUnFinishedCount = this.taskFinishedStatus(task)["unFinishedCount"]
+                    finishedCount.push(damatoFinishedCount)
+                    unFinishedCount.push(damatoUnFinishedCount)
                     labels.push(task.title)
                 }
             }
@@ -562,19 +574,19 @@ var app = new Vue({
                 "finishedCount": finishedCount,
                 "unFinishedCount": unFinishedCount,
                 "labels": labels
-            };
+            }
         },
         updateChartData: function (date = false) {
             if (date) {
-                this.loadViewDamatos(date);
+                this.loadViewDamatos(date)
             }
-            weekChart.data.datasets[0].data = this.viewDamatosCount()["finishedCount"];
-            weekChart.data.datasets[1].data = this.viewDamatosCount()["unFinishedCount"];
-            weekChart.update();
-            dayChart.data.labels = this.viewTasksCount()["labels"];
-            dayChart.data.datasets[0].data = this.viewTasksCount()["finishedCount"];
-            dayChart.data.datasets[1].data = this.viewTasksCount()["unFinishedCount"];
-            dayChart.update();
+            weekChart.data.datasets[0].data = this.viewDamatosCount()["finishedCount"]
+            weekChart.data.datasets[1].data = this.viewDamatosCount()["unFinishedCount"]
+            weekChart.update()
+            dayChart.data.labels = this.viewTasksCount()["labels"]
+            dayChart.data.datasets[0].data = this.viewTasksCount()["finishedCount"]
+            dayChart.data.datasets[1].data = this.viewTasksCount()["unFinishedCount"]
+            dayChart.update()
         },
         viewDayChange: function (dataModifyDay) {
             var changeToDate = dateChange(dataModifyDay, new Date(app.viewDetailDamato.createTime));
