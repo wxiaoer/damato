@@ -4,4 +4,4 @@ A daily task remind toll
 
 # usage
 
-[](readme.gif)
+![](readme.gif)
