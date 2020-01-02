@@ -86,7 +86,9 @@
   </style>
 </head>
 
-<body>
+<!-- 窗口关闭或者刷新前保存 damato -->
+
+<body onbeforeunload="require('electron').ipcRenderer.sendSync('damatoSave', app.damato)">
   <!-- app 主体 -->
   <div data-role="navview" data-expand="lg" data-compact="fs" data-active-state='true' id="app" v-cloak>
     <!-- 侧边菜单 -->
@@ -101,7 +103,7 @@
             <span class="caption">Damato</span>
           </a>
         </li>
-        <li @click="currentPage=1" @click.once="updateChartData()" :class="[currentPage===1?'active':'']">
+        <li @click="currentPage=1" @click.once="initAnalysePage" :class="[currentPage===1?'active':'']">
           <a class="c-pointer">
             <span class="icon"><span class="mif-chart-bars"></span></span>
             <span class="caption">Chart</span>
@@ -224,8 +226,9 @@
                 </div>
                 <div class="cell">
                   <div class="fg-gray pt-4"><label>Task continue time</label></div>
+                  <!-- data-value 绑定vue变量值，同步vue变量值变化 -->
                   <input data-role="timepicker" onchange="$(this)[0].dispatchEvent(new Event('input'));"
-                    v-model="editTask.editTaskContinueTime">
+                    :data-value="editTask.editTaskContinueTime" v-model="editTask.editTaskContinueTime">
                 </div>
               </div>
             </div>
@@ -291,10 +294,11 @@
           <div class="card">
             <div class="card-header">
               <div>Week analyse</div>
-              <div>{{dateFormat(new Date(viewDetailDamato.createTime))}}</div>
+              <div>{{new Date(viewDetailDamato.createTime).toLocaleDateString()}}</div>
               <div class="row">
-                <button class="button cell" @click="viewDayChange(-7)">< previous week</button>
-                <button class="button cell" @click="viewDayChange(7)">next week ></button>
+                <button class="button cell" @click="viewDayChange(-7)">
+                  < previous week</button> <button class="button cell" @click="viewDayChange(7)">next week >
+                </button>
               </div>
             </div>
             <div class="card-content p-2 h-30" style="position: relative;">
@@ -323,6 +327,7 @@
               <button class="button bg-lightGreen px-10" @click="feedBackSubmit">Submit</button>
             </div>
           </div>
+          <!-- 反馈 -->
         </div>
       </transition>
 
@@ -346,11 +351,11 @@
               </ul>
               <ul class="inline-list mt-5">
                 <li>Author email:</li>
-                <li><a href="">942208018@qq.com</a></li>
+                <li><a>942208018@qq.com</a></li>
               </ul>
               <ul class="inline-list mt-5">
                 <li>Author github:</li>
-                <li><a href="">https://github.com/wxiaoer</a></li>
+                <li><a href="https://github.com/wxiaoer" target="_blank">https://github.com/wxiaoer</a></li>
               </ul>
             </div>
           </div>
