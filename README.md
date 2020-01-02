@@ -1,6 +1,6 @@
 # damato
 
-A daily task remind toll
+A daily task remind tool
 
 # usage
 
