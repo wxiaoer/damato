@@ -4,6 +4,6 @@ A daily task remind tool
 
 # usage
 
-![](./readme.gif)
+!["readme1"](./readme.gif)
 
-![](readme2.gif)
+![readme2](readme2.gif)
